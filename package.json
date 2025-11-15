@@ -1,0 +1,49 @@
+{
+  "name": "nkey",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Experimental in-memory database exploring key-value storage and tree-based structures.",
+  "main": "index.js",
+  "homepage": "https://github.com/WellizxSilva/nkey#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WellizxSilva/nkey.git"
+  },
+  "bugs": {
+    "url": "https://github.com/WellizxSilva/nkey/issues"
+  },
+  "author": "Wellington Silva",
+  "license": "MIT",
+  "keywords": [
+    "database",
+    "key-value",
+    "storage",
+    "tree-based",
+    "simple",
+    "lightweight"
+  ],
+  "scripts": {
+    "build": "npx tsc",
+    "clean": "npx del-cli build",
+    "dev": "npx tsx test.ts",
+    "test": "vitest",
+    "lint": "eslint . --ext .ts"
+  },
+  "dependencies": {
+    "jiti": "^2.6.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^24.10.1",
+    "@typescript-eslint/eslint-plugin": "^8.46.4",
+    "@typescript-eslint/parser": "^8.46.4",
+    "@vitest/coverage-v8": "^4.0.9",
+    "del-cli": "^7.0.0",
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.4",
+    "vitest": "^4.0.9"
+  }
+}
