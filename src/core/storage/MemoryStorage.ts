@@ -3,56 +3,61 @@ import { KeyAlreadyExistsError } from "../../errors/KeyAlreadyExistsError";
 import { KeyNotFoundError } from "../../errors/KeyNotFoundError";
 
 export class MemoryStorage<T> implements IStorage<T> {
-  private db: Map<string, T> = new Map();
+  private store: Map<string, T> = new Map();
 
   create(key: string, value: T): boolean {
-    if (this.db.has(key)) {
+    if (this.store.has(key)) {
       throw new KeyAlreadyExistsError(key);
     }
-    this.db.set(key, value);
+    this.store.set(key, value);
     return true;
   }
 
   read(key: string): T | undefined {
-    return this.db.get(key);
+    return this.store.get(key);
   }
 
   update(key: string, value: T): boolean {
-    if (!this.db.has(key)) {
+    if (!this.store.has(key)) {
       throw new KeyNotFoundError(key);
     }
-    this.db.set(key, value);
+    this.store.set(key, value);
     return true;
   }
 
   delete(key: string): boolean {
-    if (!this.db.has(key)) {
+    if (!this.store.has(key)) {
       throw new KeyNotFoundError(key);
     }
-    return this.db.delete(key);
+    return this.store.delete(key);
+  }
+
+  upsert(key: string, value: T): boolean {
+    this.store.set(key, value);
+    return true;
   }
 
   has(key: string): boolean {
-    return this.db.has(key);
+    return this.store.has(key);
   }
 
   size(): number {
-    return this.db.size;
+    return this.store.size;
   }
 
   clear(): void {
-    this.db.clear();
+    this.store.clear();
   }
 
   values(): T[] {
-    return Array.from(this.db.values());
+    return Array.from(this.store.values());
   }
 
   keys(): string[] {
-    return Array.from(this.db.keys());
+    return Array.from(this.store.keys());
   }
 
   entries(): [string, T][] {
-    return Array.from(this.db.entries());
+    return Array.from(this.store.entries());
   }
 }
