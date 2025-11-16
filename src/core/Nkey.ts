@@ -23,6 +23,10 @@ export class Nkey<T> {
     return this.storage.delete(key);
   }
 
+  upsert(key: string, value: T) {
+    return this.storage.upsert(key, value);
+  }
+
   has(key: string) {
     return this.storage.has(key);
   }
