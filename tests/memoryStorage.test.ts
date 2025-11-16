@@ -52,6 +52,19 @@ describe("MemoryStorage<User>", () => {
     expect(() => storage.delete("user:99")).toThrow(KeyNotFoundError);
   });
 
+  it("should upsert values correctly", () => {
+    const storage = new MemoryStorage<User>();
+    storage.clear();
+
+    // creates
+    storage.upsert("user:1", { name: "Wellizx", age: 25 });
+    expect(storage.read("user:1")).toEqual({ name: "Wellizx", age: 25 });
+
+    // updates
+    storage.upsert("user:1", { name: "Wellizx", age: 26 });
+    expect(storage.read("user:1")).toEqual({ name: "Wellizx", age: 26 });
+  });
+
   it("should return the keys, values and entries", () => {
     const storage = new MemoryStorage<User>();
     storage.create("user:1", { name: "Wellizx", age: 25 });
