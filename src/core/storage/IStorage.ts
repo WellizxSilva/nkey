@@ -3,6 +3,7 @@ export interface IStorage<T> {
   read(key: string): T | undefined;
   update(key: string, value: T): boolean;
   delete(key: string): boolean;
+  upsert(key: string, value: T): boolean;
   has(key: string): boolean;
   size(): number;
   clear(): void;
