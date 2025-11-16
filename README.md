@@ -39,39 +39,69 @@ cd nkey
 
 ## 🛠 Usage
 
-TypeScript (initial implementation)
+In-Memory Usage
 
 ```ts
 import { Nkey, MemoryStorage } from "./src";
 
-//Type example
 type User = { name: string; age: number };
-
-// Create a new database instance using in-memory storage
 const db = new Nkey<User>(new MemoryStorage<User>());
 
-// Create entries
 db.create("user:1", { name: "Wellizx", age: 25 });
-db.create("user:2", { name: "John", age: 30 });
+console.log(db.read("user:1"));
+// Output: { name: "Wellizx", age: 25 }
+```
+
+File-Based Storage (JSON persistence)
+
+```ts
+import { Nkey, FileStorage } from "./src";
+
+type User = {
+  id: string;
+  name: string;
+  age: number;
+  email: string;
+  active: boolean;
+};
+
+const db = new Nkey<User>(new FileStorage<User>("./users.json"));
+
+// Create entries
+db.create("user:1", {
+  id: "1",
+  name: "Wellizx",
+  age: 25,
+  email: "wellizx@example.com",
+  active: true,
+});
+db.create("user:2", {
+  id: "2",
+  name: "John",
+  age: 30,
+  email: "john@example.com",
+  active: true,
+});
 
 // Read entry
 console.log(db.read("user:1"));
-// Output: { name: "Wellizx", age: 25 }
+// Output: { id: "1", name: "Wellizx", age: 25, email: "wellizx@example.com", active: true }
 
 // Update entry
-db.update("user:1", { name: "Wellizx", age: 26 });
+db.update("user:1", {
+  id: "1",
+  name: "Wellizx",
+  age: 26,
+  email: "wellizx@example.com",
+  active: true,
+});
 console.log(db.read("user:1"));
-// Output: { name: "Wellizx", age: 26 }
+// Output: { id: "1", name: "Wellizx", age: 26, email: "wellizx@example.com", active: true }
 
 // Delete entry
 db.delete("user:2");
 console.log(db.read("user:2"));
 // Output: undefined
-
-// Inspect database
-console.log(db.keys()); // ["user:1"]
-console.log(db.entries()); // [["user:1", { name: "Wellizx", age: 26 }]]
-console.log(db.size()); // 1
 ```
 
 🧪 Testing
@@ -93,7 +123,7 @@ yarn test
 
 ✅ Unit tests with Vitest
 
-🔜 JSON-based persistence (JSONStorage)
+✅ JSON-based persistence (JSONStorage)
 
 🔜 Tree structures (BST, B-Tree)
 
