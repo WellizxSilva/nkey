@@ -4,3 +4,4 @@ export { DatabaseError } from "./errors/DatabaseError";
 export { KeyNotFoundError } from "./errors/KeyNotFoundError";
 export { KeyAlreadyExistsError } from "./errors/KeyAlreadyExistsError";
 export { MemoryStorage } from "./core/storage/MemoryStorage";
+export { FileStorage } from "./core/storage/FileStorage";
