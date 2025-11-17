@@ -20,13 +20,13 @@ Fast CRUD operations (Create, Read, Update, Delete)
 
 Key-Value model as the foundation
 
+Optional persistence layer (e.g., JSON storage)
+
 Planned support for:
 
 Tree-based structures (BST, B-Tree)
 
 Indexes for faster queries
-
-Optional persistence layer (e.g., JSON storage)
 
 ## 📦 Installation
 
