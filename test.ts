@@ -46,12 +46,13 @@ console.log("User 3:", db.read("user:3")); // undefined
 const activeUsers = db.values().filter((u) => u.active);
 console.log("Active users:", activeUsers);
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const olderUsers = db.entries().filter(([_, u]) => u.age > 24);
 console.log("Users older than 24:", olderUsers);
 
 // Email Export
 const emails = db.values().map((u) => u.email);
-console.log("Emails cadastrados:", emails);
+console.log("Emails:", emails);
 
 // Inspection
 console.log("Keys:", db.keys());
