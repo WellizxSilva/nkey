@@ -3,7 +3,6 @@
 
 ![Build Status](https://img.shields.io/github/actions/workflow/status/WellizxSilva/nkey/ci.yml?branch=main)
 ![Tests](https://img.shields.io/github/actions/workflow/status/WellizxSilva/nkey/test.yml?label=tests)
-![Coverage](https://img.shields.io/codecov/c/github/WellizxSilva/nkey)
 ![License](https://img.shields.io/github/license/WellizxSilva/nkey)
 ![Version](https://img.shields.io/github/package-json/v/WellizxSilva/nkey/main)
 ![Issues](https://img.shields.io/github/issues/WellizxSilva/nkey)
