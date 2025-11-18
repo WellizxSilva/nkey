@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { Nkey } from "../src/core/Nkey";
 import { MemoryStorage, FileStorage } from "../src";
+import { NoStorageProvidedError } from "../src";
 
 type User = {
   name: string;
@@ -21,5 +22,14 @@ describe("Nkey<User> with FileStorage<User>", () => {
     const db = new Nkey<User>(new FileStorage<User>(filePath));
     db.create("user:1", { name: "Wellizx" });
     expect(db.read("user:1")).toEqual({ name: "Wellizx" });
+  });
+});
+
+describe("Nkey with no storage", () => {
+  it("should throw an error", () => {
+    const db = new Nkey<User>();
+    expect(() => db.create("user:1", { name: "Wellizx" })).toThrow(
+      NoStorageProvidedError
+    );
   });
 });
