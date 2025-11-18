@@ -2,23 +2,36 @@ import { IStorage } from "./IStorage";
 import { KeyAlreadyExistsError } from "../../errors/KeyAlreadyExistsError";
 import { KeyNotFoundError } from "../../errors/KeyNotFoundError";
 import * as fs from "node:fs";
+import * as path from "node:path";
 export class FileStorage<T> implements IStorage<T> {
   private filePath: string;
   private store: Map<string, T>;
 
   constructor(filePath: string) {
     this.filePath = filePath;
-    this.store = new Map<string, T>();
-    if (fs.existsSync(filePath)) {
-      const data = fs.readFileSync(filePath, "utf-8");
-      this.store = new Map(Object.entries(JSON.parse(data)));
+    this.store = new Map();
+    this.load();
+  }
+
+  private ensureDir() {
+    const dir = path.dirname(this.filePath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
     }
   }
 
+  private load(): void {
+    if (fs.existsSync(this.filePath)) {
+      const data = fs.readFileSync(this.filePath, "utf-8");
+      this.store = new Map(Object.entries(JSON.parse(data)));
+    }
+  }
   private persist(): void {
+    this.ensureDir();
     fs.writeFileSync(
       this.filePath,
-      JSON.stringify(Object.fromEntries(this.store))
+      JSON.stringify(Object.fromEntries(this.store), null, 2),
+      "utf-8"
     );
   }
 
