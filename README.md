@@ -13,19 +13,23 @@
 
 ## Features
 
-Lightweight in-memory storage
+- Lightweight in-memory storage
 
-Fast CRUD operations (Create, Read, Update, Delete)
+- File-based JSON persistence
 
-Key-Value model as the foundation
+- Fast CRUD operations (Create, Read, Update, Delete)
 
-Optional persistence layer (e.g., JSON storage)
+- Key-Value model as the foundation
+
+- Collections support (multiple logical tables)
 
 Planned support for:
 
-Tree-based structures (BST, B-Tree)
+- Tree-based structures (BST, B-Tree)
 
-Indexes for faster queries
+- Indexes for faster queries
+
+- Fluent API for chaining operations
 
 ## 📦 Installation
 
@@ -103,6 +107,50 @@ console.log(db.read("user:2"));
 // Output: undefined
 ```
 
+Collections (multiple logical tables)
+
+```ts
+import { Nkey, FileStorage } from "./src";
+
+type User = {
+  id: string;
+  name: string;
+  age: number;
+  email: string;
+  active: boolean;
+};
+type Product = { id: string; name: string; price: number };
+
+const db = new Nkey();
+const basePath = "database";
+// Users collection
+const users = db.collection<User>(
+  "users",
+  new FileStorage<User>(`${basePath}/users.json`)
+);
+users.create("user:1", {
+  id: "1",
+  name: "Wellizx",
+  age: 25,
+  email: "wellizx@example.com",
+  active: true,
+});
+
+// Products collection
+const products = db.collection<Product>(
+  "products",
+  new FileStorage<Product>(`${basePath}/products.json`)
+);
+products.create("product:1", { id: "1", name: "Laptop", price: 2000 });
+
+// Queries
+console.log(users.read("user:1"));
+// Output: { id: "1", name: "Wellizx", age: 25, email: "wellizx@example.com", active: true }
+
+console.log(products.read("product:1"));
+// Output: { id: "1", name: "Laptop", price: 2000 }
+```
+
 🧪 Testing
 This project uses Vitest for unit testing. Run the tests with:
 
@@ -123,6 +171,8 @@ yarn test
 ✅ Unit tests with Vitest
 
 ✅ JSON-based persistence (JSONStorage)
+
+✅ Collections support
 
 🔜 Tree structures (BST, B-Tree)
 
