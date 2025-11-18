@@ -1,5 +1,6 @@
+import { NkeyCollection } from "./NkeyCollection";
 import { IStorage } from "./storage/IStorage";
-
+import { NoStorageProvidedError } from "../errors/NoStorageProvidedError";
 /**
  * ---
  * Nkey
@@ -7,98 +8,54 @@ import { IStorage } from "./storage/IStorage";
  * ___Data structure for storing key-value pairs___
  */
 
-export class Nkey<T> {
-  private storage: IStorage<T>;
+export class Nkey<T> extends NkeyCollection<T> {
+  private collections: Map<string, IStorage<unknown>> = new Map();
 
-  /** Storage instance: Adapter (eg. FileStorage) */
-  constructor(storage: IStorage<T>) {
-    this.storage = storage;
+  constructor(storage?: IStorage<T>) {
+    super(
+      storage ??
+        ({
+          create: () => {
+            throw new NoStorageProvidedError();
+          },
+          read: () => {
+            throw new NoStorageProvidedError();
+          },
+          update: () => {
+            throw new NoStorageProvidedError();
+          },
+          delete: () => {
+            throw new NoStorageProvidedError();
+          },
+          upsert: () => {
+            throw new NoStorageProvidedError();
+          },
+          has: () => {
+            throw new NoStorageProvidedError();
+          },
+          size: () => {
+            throw new NoStorageProvidedError();
+          },
+          clear: () => {
+            throw new NoStorageProvidedError();
+          },
+          values: () => {
+            throw new NoStorageProvidedError();
+          },
+          keys: () => {
+            throw new NoStorageProvidedError();
+          },
+          entries: () => {
+            throw new NoStorageProvidedError();
+          },
+        } as IStorage<T>)
+    );
   }
 
-  /**
-   * Create a new key-value pair
-   * @param key - The key to create
-   * @param value - The value to associate with the key
-   */
-  create(key: string, value: T) {
-    return this.storage.create(key, value);
-  }
-
-  /**
-   * Read the value associated with a key
-   * @param key - The key to read
-   */
-  read(key: string) {
-    return this.storage.read(key);
-  }
-
-  /**
-   * Update the value associated with a key
-   * @param key - The key to update
-   * @param value - The new value to associate with the key
-   */
-
-  update(key: string, value: T) {
-    return this.storage.update(key, value);
-  }
-
-  /**
-   * Delete a key-value pair
-   * @param key - The key to delete
-   */
-  delete(key: string) {
-    return this.storage.delete(key);
-  }
-
-  /**
-   * Upsert a key-value pair (try to update, otherwise create)
-   * @param key - The key to upsert
-   * @param value - The value to associate with the key
-   */
-  upsert(key: string, value: T) {
-    return this.storage.upsert(key, value);
-  }
-
-  /**
-   * Check if a key exists
-   * @param key - The key to check
-   */
-  has(key: string) {
-    return this.storage.has(key);
-  }
-
-  /**
-   * Get the number of key-value pairs
-   */
-  size() {
-    return this.storage.size();
-  }
-
-  /**
-   * Remove all key-value pairs
-   */
-  clear() {
-    return this.storage.clear();
-  }
-
-  /**
-   * Get the values of all key-value pairs
-   */
-  values() {
-    return this.storage.values();
-  }
-
-  /**
-   * Get the keys of all key-value pairs
-   */
-  keys() {
-    return this.storage.keys();
-  }
-
-  /**
-   * Get all key-value pairs
-   */
-  entries() {
-    return this.storage.entries();
+  collection<U>(name: string, storage: IStorage<U>): NkeyCollection<U> {
+    if (!this.collections.has(name)) {
+      this.collections.set(name, storage);
+    }
+    return new NkeyCollection<U>(this.collections.get(name)! as IStorage<U>); // makes a type assertion to the correct type
   }
 }
