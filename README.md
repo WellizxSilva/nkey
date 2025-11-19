@@ -42,7 +42,7 @@ cd nkey
 
 ## 🛠 Usage
 
-In-Memory Usage
+#### In-Memory Usage
 
 ```ts
 import { Nkey, MemoryStorage } from "./src";
@@ -55,7 +55,7 @@ console.log(db.read("user:1"));
 // Output: { name: "Wellizx", age: 25 }
 ```
 
-File-Based Storage (JSON persistence)
+#### File-Based Storage (JSON persistence)
 
 ```ts
 import { Nkey, FileStorage } from "./src";
@@ -107,7 +107,11 @@ console.log(db.read("user:2"));
 // Output: undefined
 ```
 
-Collections (multiple logical tables)
+#### Collections (multiple logical tables)
+
+**You can create collections in two ways:**
+
+- 1.Manual typing per collection
 
 ```ts
 import { Nkey, FileStorage } from "./src";
@@ -149,6 +153,52 @@ console.log(users.read("user:1"));
 
 console.log(products.read("product:1"));
 // Output: { id: "1", name: "Laptop", price: 2000 }
+```
+
+2. Automatic typing with a collections map
+
+```ts
+import { Nkey, FileStorage } from "./src";
+
+interface User {
+  id: string;
+  name: string;
+  age: number;
+  email: string;
+  active: boolean;
+}
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+}
+
+interface Collections {
+  users: User;
+  products: Product;
+}
+
+const db = new Nkey<Collections>();
+const users = db.collection(
+  "users",
+  new FileStorage<User>("database/users.json")
+);
+const products = db.collection(
+  "products",
+  new FileStorage<Product>("database/products.json")
+);
+
+users.create("user:1", {
+  id: "2",
+  name: "wellizx",
+  age: 30,
+  email: "wellizx@example.com",
+  active: true,
+});
+products.create("product:1", { id: "1", name: "Phone", price: 1500 });
+
+console.log(users.read("user:1"));
+console.log(products.read("product:1"));
 ```
 
 🧪 Testing
