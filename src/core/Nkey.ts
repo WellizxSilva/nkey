@@ -9,8 +9,8 @@ import { NoStorageProvidedError } from "../errors/NoStorageProvidedError";
  */
 
 export class Nkey<
-  T = unknown,
-  TCollections extends object = { [key: string]: unknown }
+  TCollections extends object = { [key: string]: unknown },
+  T = unknown
 > extends NkeyCollection<T> {
   private collections: Map<
     keyof TCollections,
@@ -58,9 +58,9 @@ export class Nkey<
     );
   }
 
-  /**
-   * ____________________OVERLOADs____________________
-   */
+  //
+  // ____________________OVERLOADs____________________
+  //
   collection<K extends keyof TCollections>(
     name: K,
     storage?: IStorage<TCollections[K]>
