@@ -1,11 +1,17 @@
 import { IStorage } from "./storage/IStorage";
-
+import { HookManager } from "../hooks/HookManager";
+import { HookCallback, HookEvent } from "../hooks/types";
 export class NkeyCollection<T> {
   private storage: IStorage<T>;
+  private hookManager = new HookManager<T>();
 
   /** Storage instance: Adapter (eg. FileStorage) */
   constructor(storage: IStorage<T>) {
     this.storage = storage;
+  }
+  /** Activate a specific hook */
+  on<E extends HookEvent>(event: E, callback: HookCallback<T, E>) {
+    this.hookManager.on(event, callback);
   }
 
   /**
@@ -14,7 +20,9 @@ export class NkeyCollection<T> {
    * @param value - The value to associate with the key
    */
   create(key: string, value: T) {
-    return this.storage.create(key, value);
+    const result = this.storage.create(key, value);
+    this.hookManager.trigger("create", key, value);
+    return result;
   }
 
   /**
@@ -22,7 +30,9 @@ export class NkeyCollection<T> {
    * @param key - The key to read
    */
   read(key: string) {
-    return this.storage.read(key);
+    const result = this.storage.read(key);
+    this.hookManager.trigger("read", key, result);
+    return result;
   }
 
   /**
@@ -32,7 +42,10 @@ export class NkeyCollection<T> {
    */
 
   update(key: string, value: T) {
-    return this.storage.update(key, value);
+    const oldValue = this.storage.read(key);
+    const result = this.storage.update(key, value);
+    this.hookManager.trigger("update", key, oldValue, value);
+    return result;
   }
 
   /**
@@ -40,7 +53,10 @@ export class NkeyCollection<T> {
    * @param key - The key to delete
    */
   delete(key: string) {
-    return this.storage.delete(key);
+    const oldValue = this.storage.read(key);
+    const result = this.storage.delete(key);
+    this.hookManager.trigger("delete", key, oldValue);
+    return result;
   }
 
   /**
@@ -49,7 +65,16 @@ export class NkeyCollection<T> {
    * @param value - The value to associate with the key
    */
   upsert(key: string, value: T) {
-    return this.storage.upsert(key, value);
+    const exists = this.storage.has(key);
+    const oldValue = exists ? this.storage.read(key) : undefined;
+    const result = this.storage.upsert(key, value);
+    this.hookManager.trigger(
+      exists ? "update" : "create",
+      key,
+      oldValue,
+      value
+    );
+    return result;
   }
 
   /**
