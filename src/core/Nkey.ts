@@ -8,12 +8,18 @@ import { NoStorageProvidedError } from "../errors/NoStorageProvidedError";
  * ___Data structure for storing key-value pairs___
  */
 
-export class Nkey<T> extends NkeyCollection<T> {
-  private collections: Map<string, IStorage<unknown>> = new Map();
+export class Nkey<
+  T = unknown,
+  TCollections extends object = { [key: string]: unknown }
+> extends NkeyCollection<T> {
+  private collections: Map<
+    keyof TCollections,
+    IStorage<TCollections[keyof TCollections]>
+  > = new Map();
 
-  constructor(storage?: IStorage<T>) {
+  constructor(private defaultStorage?: IStorage<T>) {
     super(
-      storage ??
+      defaultStorage ??
         ({
           create: () => {
             throw new NoStorageProvidedError();
@@ -52,10 +58,29 @@ export class Nkey<T> extends NkeyCollection<T> {
     );
   }
 
-  collection<U>(name: string, storage: IStorage<U>): NkeyCollection<U> {
+  /**
+   * ____________________OVERLOADs____________________
+   */
+  collection<K extends keyof TCollections>(
+    name: K,
+    storage?: IStorage<TCollections[K]>
+  ): NkeyCollection<TCollections[K]>;
+
+  collection<U>(name: string, storage: IStorage<U>): NkeyCollection<U>;
+
+  collection<K extends keyof TCollections>(
+    name: K,
+    storage?: IStorage<TCollections[K]>
+  ): NkeyCollection<TCollections[K]> {
     if (!this.collections.has(name)) {
-      this.collections.set(name, storage);
+      this.collections.set(
+        name,
+        storage ??
+          (this.defaultStorage as IStorage<TCollections[keyof TCollections]>)
+      );
     }
-    return new NkeyCollection<U>(this.collections.get(name)! as IStorage<U>); // makes a type assertion to the correct type
+    return new NkeyCollection<TCollections[K]>(
+      this.collections.get(name)! as IStorage<TCollections[K]>
+    );
   }
 }
