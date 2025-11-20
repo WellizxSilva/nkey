@@ -1,6 +1,6 @@
 {
   "name": "nkey",
-  "version": "0.6.0y",
+  "version": "0.6.0",
   "type": "module",
   "description": "Experimental lightweight database exploring key-value storage and tree-based structures.",
   "main": "dist/index.js",
