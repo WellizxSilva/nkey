@@ -66,7 +66,7 @@ export class Nkey<
     storage?: IStorage<TCollections[K]>
   ): NkeyCollection<TCollections[K]>;
 
-  collection<U>(name: string, storage: IStorage<U>): NkeyCollection<U>;
+  collection<U>(name: string, storage?: IStorage<U>): NkeyCollection<U>;
 
   collection<K extends keyof TCollections>(
     name: K,
