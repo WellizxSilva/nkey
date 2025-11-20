@@ -33,175 +33,25 @@ Planned support for:
 
 ## 📦 Installation
 
-Clone the repository:
-
 ```sh
-git clone https://github.com/WellizxSilva/nkey.git
-cd nkey
+npm install git+https://github.com/WellizxSilva/nkey.git
+# using yarn
+yarn add https://github.com/WellizxSilva/nkey.git
 ```
 
-## 🛠 Usage
+## Documentation
 
-#### In-Memory Usage
+Usage examples are avaiable on the [docs](./docs) folder
 
-```ts
-import { Nkey, MemoryStorage } from "./src";
+- [Getting Started](./docs/getting-started.md)
+- [Key-Value](./docs/key-value.md)
+- [Collections](./docs/collections.md)
+- [Storage](./docs/storage.md)
+- [Hooks](./docs/hooks.md)
+- [Advanced](./docs/advanced.md)
 
-type User = { name: string; age: number };
-const db = new Nkey<User>(new MemoryStorage<User>());
+## 🧪 Testing
 
-db.create("user:1", { name: "Wellizx", age: 25 });
-console.log(db.read("user:1"));
-// Output: { name: "Wellizx", age: 25 }
-```
-
-#### File-Based Storage (JSON persistence)
-
-```ts
-import { Nkey, FileStorage } from "./src";
-
-type User = {
-  id: string;
-  name: string;
-  age: number;
-  email: string;
-  active: boolean;
-};
-
-const db = new Nkey<User>(new FileStorage<User>("./users.json"));
-
-// Create entries
-db.create("user:1", {
-  id: "1",
-  name: "Wellizx",
-  age: 25,
-  email: "wellizx@example.com",
-  active: true,
-});
-db.create("user:2", {
-  id: "2",
-  name: "John",
-  age: 30,
-  email: "john@example.com",
-  active: true,
-});
-
-// Read entry
-console.log(db.read("user:1"));
-// Output: { id: "1", name: "Wellizx", age: 25, email: "wellizx@example.com", active: true }
-
-// Update entry
-db.update("user:1", {
-  id: "1",
-  name: "Wellizx",
-  age: 26,
-  email: "wellizx@example.com",
-  active: true,
-});
-console.log(db.read("user:1"));
-// Output: { id: "1", name: "Wellizx", age: 26, email: "wellizx@example.com", active: true }
-
-// Delete entry
-db.delete("user:2");
-console.log(db.read("user:2"));
-// Output: undefined
-```
-
-#### Collections (multiple logical tables)
-
-**You can create collections in two ways:**
-
-- 1.Manual typing per collection
-
-```ts
-import { Nkey, FileStorage } from "./src";
-
-type User = {
-  id: string;
-  name: string;
-  age: number;
-  email: string;
-  active: boolean;
-};
-type Product = { id: string; name: string; price: number };
-
-const db = new Nkey();
-const basePath = "database";
-// Users collection
-const users = db.collection<User>(
-  "users",
-  new FileStorage<User>(`${basePath}/users.json`)
-);
-users.create("user:1", {
-  id: "1",
-  name: "Wellizx",
-  age: 25,
-  email: "wellizx@example.com",
-  active: true,
-});
-
-// Products collection
-const products = db.collection<Product>(
-  "products",
-  new FileStorage<Product>(`${basePath}/products.json`)
-);
-products.create("product:1", { id: "1", name: "Laptop", price: 2000 });
-
-// Queries
-console.log(users.read("user:1"));
-// Output: { id: "1", name: "Wellizx", age: 25, email: "wellizx@example.com", active: true }
-
-console.log(products.read("product:1"));
-// Output: { id: "1", name: "Laptop", price: 2000 }
-```
-
-2. Automatic typing with a collections map
-
-```ts
-import { Nkey, FileStorage } from "./src";
-
-interface User {
-  id: string;
-  name: string;
-  age: number;
-  email: string;
-  active: boolean;
-}
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-}
-
-interface Collections {
-  users: User;
-  products: Product;
-}
-
-const db = new Nkey<Collections>();
-const users = db.collection(
-  "users",
-  new FileStorage<User>("database/users.json")
-);
-const products = db.collection(
-  "products",
-  new FileStorage<Product>("database/products.json")
-);
-
-users.create("user:1", {
-  id: "2",
-  name: "wellizx",
-  age: 30,
-  email: "wellizx@example.com",
-  active: true,
-});
-products.create("product:1", { id: "1", name: "Phone", price: 1500 });
-
-console.log(users.read("user:1"));
-console.log(products.read("product:1"));
-```
-
-🧪 Testing
 This project uses Vitest for unit testing. Run the tests with:
 
 ```sh
