@@ -10,7 +10,6 @@ npm install git+https://github.com/WellizxSilva/nkey.git
 yarn add https://github.com/WellizxSilva/nkey.git
 ```
 
-````
 
 ### First Example
 
