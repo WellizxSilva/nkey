@@ -8,7 +8,11 @@
     "strictNullChecks": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "paths": {
+      "nkey": ["./src/index.ts"]
+    }
   },
   "include": ["src/**/*.ts"]
 }
