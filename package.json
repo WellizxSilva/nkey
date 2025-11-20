@@ -1,9 +1,9 @@
 {
   "name": "nkey",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "type": "module",
   "description": "Experimental lightweight database exploring key-value storage and tree-based structures.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "homepage": "https://github.com/WellizxSilva/nkey#readme",
   "repository": {
     "type": "git",
@@ -24,14 +24,15 @@
     "lightweight"
   ],
   "scripts": {
+    "prepare": "npm run build",
     "build": "npx tsc",
     "clean": "npx del-cli build",
-    "dev": "npx tsx test.ts",
     "test": "vitest",
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {
-    "jiti": "^2.6.1"
+    "jiti": "^2.6.1",
+    "nkey": "https://github.com/WellizxSilva/nkey.git"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
